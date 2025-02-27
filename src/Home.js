@@ -24,7 +24,13 @@ export default function Home() {
     } else {
       monthsdiff = monthsdiff + differenceInMonths(currentdatetime, bill.date);
     }
-    setSum(((monthsdiff * 2) / 100) * bill.amount);
+    console.log(monthsdiff);
+    if (monthsdiff < 0) {
+      setSum(0);
+    } else {
+      setSum(((monthsdiff * 2) / 100) * bill.amount);
+    }
+
     monthsdiff = 0;
     setTotalAmount(+sum + billAmount);
   };
