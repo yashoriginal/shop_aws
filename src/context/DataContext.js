@@ -44,7 +44,7 @@ export const DataProvider = ({ children }) => {
   const handleDelete = async (id) => {
     const params = {
       TableName: "bills",
-      Key: { id: id.toString() },
+      Key: { id: id, name: name },
     };
 
     try {
