@@ -24,7 +24,6 @@ export default function Home() {
     } else {
       monthsdiff = monthsdiff + differenceInMonths(currentdatetime, bill.date);
     }
-    console.log(monthsdiff);
     if (monthsdiff < 0) {
       setSum(0);
     } else {
