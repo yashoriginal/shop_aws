@@ -16,7 +16,8 @@ export default function EditBills() {
     const params = {
       TableName: "bills",
       Key: { id: id },
-      UpdateExpression: "set #name = :name, #amount = :amount, #date = :date",
+      UpdateExpression:
+        "set #name = :name, #amount = :amount, #date = :datetime",
       ExpressionAttributeNames: {
         "#name": "name",
         "#amount": "amount",
