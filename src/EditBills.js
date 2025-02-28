@@ -16,12 +16,11 @@ export default function EditBills() {
     const params = {
       TableName: "bills",
       Key: { id: id },
-      UpdateExpression:
-        "set #name = :name, #amount = :amount, #date = :datetime",
+      UpdateExpression: "set #name = :name, #amount = :amount, #date = :date",
       ExpressionAttributeNames: {
         "#name": "name",
         "#amount": "amount",
-        "#date": "datetime",
+        "#date": "date",
       },
       ExpressionAttributeValues: {
         ":name": editName,
