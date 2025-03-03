@@ -12,6 +12,17 @@ export const DataProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  const [formData, setFormData] = useState({
+    name: "",
+    date: new Date().toISOString().split("T")[0],
+    type: "gold",
+    amount: "",
+    address: "",
+    itemDetails: "",
+    weight: "",
+    contact: "",
+  });
+
   const navigate = useNavigate();
 
   const fetchItems = useCallback(async () => {
@@ -58,22 +69,38 @@ export const DataProvider = ({ children }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datetime = format(new Date(), "MM-dd-yyyy");
+    const datetime = format(formData.date, "MM-dd-yyyy");
     const id = bills.length + 1;
     const params = {
       TableName: "bills",
       Item: {
         id: id.toString(),
-        name: name,
-        amount: amount,
+
+        name: formData.name,
         date: datetime,
+        type: formData.type,
+        amount: formData.amount,
+        address: formData.address,
+        itemDetails: formData.itemDetails,
+        quantity: formData.quantity,
+        weight: formData.weight,
+        contact: formData.contact,
       },
     };
 
     try {
       await docClient.put(params).promise();
-      setName("");
-      setAmount("");
+      setFormData({
+        name: "",
+        date: new Date().toISOString().split("T")[0],
+        type: "silver",
+        amount: "",
+        address: "",
+        itemDetails: "",
+        quantity: "",
+        weight: "",
+        contact: "",
+      });
       fetchItems();
     } catch (err) {
       console.error("Error creating item:", err);
@@ -96,6 +123,8 @@ export const DataProvider = ({ children }) => {
         search,
         setSearchResults,
         fetchItems,
+        formData,
+        setFormData,
       }}
     >
       {children}

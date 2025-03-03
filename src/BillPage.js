@@ -17,7 +17,13 @@ export default function BillPage() {
             <h2>Bill no: {bill.id}</h2>
             <h3>Name: {bill.name}</h3>
             <p>Date: {bill.date}</p>
-            <p>Loan amount: {bill.amount}</p>
+            <p>Item type: {bill.type}</p>
+            <p>Address: {bill.address}</p>
+            <p>Item Detaisl: {bill.itemDetails}</p>
+            <p>Quantity: {bill.quantity}</p>
+            <p>Weight: {bill.weight}</p>
+            <p>Contact no: {bill.contact}</p>
+
             <Link to={`/editbills/${id}`}>
               <button className="submit-btn">Edit</button>
             </Link>

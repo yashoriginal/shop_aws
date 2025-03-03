@@ -2,34 +2,130 @@ import { useContext } from "react";
 import DataContext from "./context/DataContext";
 
 export default function NewBill() {
-  const { name, amount, setName, setAmount, handleSubmit } =
-    useContext(DataContext);
+  const { handleSubmit, formData, setFormData } = useContext(DataContext);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name: </label>
+          <label>Name:</label>
           <input
-            id="name"
             type="text"
-            placeholder="Name"
-            value={name}
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
             required
-            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Date:</label>
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Item Type:</label>
+          <label>
+            <input
+              type="radio"
+              name="type"
+              value="gold"
+              checked={formData.type === "gold"}
+              onChange={handleChange}
+            />
+            Gold
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="type"
+              value="silver"
+              checked={formData.type === "silver"}
+              onChange={handleChange}
+            />
+            Silver
+          </label>
+        </div>
+
+        <div className="form-group">
+          <label className="block">Amount:</label>
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Address:</label>
+          <textarea
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Item Details:</label>
+          <input
+            type="text"
+            name="itemDetails"
+            value={formData.itemDetails}
+            onChange={handleChange}
+            required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="amount">Loan Amount: </label>
+          <label>Quantity:</label>
           <input
-            id="name"
-            type="number"
-            placeholder="Loan Amount"
-            value={amount}
+            type="text"
+            name="quantity"
+            value={formData.qunatity}
+            onChange={handleChange}
             required
-            onChange={(e) => setAmount(e.target.value)}
           />
         </div>
+
+        <div className="form-group">
+          <label>Weight:</label>
+          <input
+            type="number"
+            name="weight"
+            value={formData.weight}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Contact:</label>
+          <input
+            type="text"
+            name="contact"
+            value={formData.contact}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
         <button className="submit-btn" type="submit">
           Save
         </button>
