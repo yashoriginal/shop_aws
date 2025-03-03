@@ -75,7 +75,6 @@ export const DataProvider = ({ children }) => {
       TableName: "bills",
       Item: {
         id: id.toString(),
-
         name: formData.name,
         date: datetime,
         type: formData.type,

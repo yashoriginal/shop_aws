@@ -98,7 +98,7 @@ export default function NewBill() {
           <input
             type="text"
             name="quantity"
-            value={formData.qunatity}
+            value={formData.quantity}
             onChange={handleChange}
             required
           />
