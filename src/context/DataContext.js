@@ -7,8 +7,6 @@ const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
   const [bills, setBills] = useState([]);
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -112,10 +110,6 @@ export const DataProvider = ({ children }) => {
         bills,
         setBills,
         handleDelete,
-        name,
-        amount,
-        setName,
-        setAmount,
         handleSubmit,
         handleSearch,
         searchResults,
