@@ -2,8 +2,26 @@ import { useContext, useState } from "react";
 import DataContext from "./context/DataContext";
 import { format, differenceInMonths } from "date-fns";
 import { Link } from "react-router-dom";
+import jsPDF from "jspdf";
+import { MdDownload } from "react-icons/md";
 
 export default function Home() {
+  const generatePDF = (currentBill) => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Jewelry Loan Bill", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Customer Name: ${currentBill.name}`, 20, 40);
+    doc.text(`Loan Amount: ${currentBill.amount}`, 20, 50);
+    doc.text(`Interest Rate: ${currentBill.type === "gold" ? 2 : 3}%`, 20, 60);
+    doc.text(`Loan Start Date: ${currentBill.date}`, 20, 70);
+    doc.text("_______________", 20, 80);
+    doc.text("_______________", 20, 90);
+    doc.text(`Loan Amount: ${currentBill.amount}`, 20, 100);
+    doc.text(`Interest Amount: ${sum}`, 20, 110);
+    doc.text(`Total Amount: ${+billAmount + sum}`, 20, 120);
+    doc.save(`Bill_${currentBill.name}.pdf`);
+  };
   const { bills } = useContext(DataContext);
   const [billNum, setBillNum] = useState("");
   const [sum, setSum] = useState("");
@@ -80,6 +98,10 @@ export default function Home() {
               <p>Date: {currentBill.date}</p>
             </Link>
             <p>Loan amount: {currentBill.amount}</p>
+            <button onClick={() => generatePDF(currentBill)}>
+              <MdDownload />
+              Download Bill
+            </button>
           </li>
         </ul>
       ) : undefined}
