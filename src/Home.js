@@ -1,11 +1,30 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import DataContext from "./context/DataContext";
 import { format, differenceInMonths } from "date-fns";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import { MdDownload } from "react-icons/md";
+import axios from "axios";
 
 export default function Home() {
+  const [rates, setRates] = useState(null);
+
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await axios.get("https://www.goldapi.io/api/XAU/INR", {
+          headers: { "x-access-token": "goldapi-1f9kjusm833h169-io" },
+        });
+        setRates(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchRates();
+  }, []);
+  console.log(Math.trunc(rates.price_gram_24k));
+
   const generatePDF = (currentBill) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
