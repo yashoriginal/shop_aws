@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import DataContext from "./context/DataContext";
 import { format } from "date-fns";
-import { docClient } from "./aws/awsClient";
 import { useNavigate } from "react-router-dom";
 
 export default function EditBills() {
@@ -31,42 +30,34 @@ export default function EditBills() {
   };
 
   const handleEdit = async (id) => {
-    const datetime = format(editedData.date, "MM-dd-yyyy");
-    const params = {
-      TableName: "bills",
-      Key: { id: id },
-      UpdateExpression:
-        "set #name = :name, #date = :date, #type = :type,  #amount = :amount,  #address = :address,  #itemDetails = :itemDetails, #quantity = :quantity,  #weight = :weight,  #contact = :contact",
-      ExpressionAttributeNames: {
-        "#name": "name",
-        "#date": "date",
-        "#type": "type",
-        "#amount": "amount",
-        "#address": "address",
-        "#itemDetails": "itemDetails",
-        "#quantity": "quantity",
-        "#weight": "weight",
-        "#contact": "contact",
-      },
-      ExpressionAttributeValues: {
-        ":name": editedData.name,
-        ":date": datetime,
-        ":type": editedData.type,
-        ":amount": editedData.amount,
-        ":address": editedData.address,
-        ":itemDetails": editedData.itemDetails,
-        ":quantity": editedData.quantity,
-        ":weight": editedData.weight,
-        ":contact": editedData.contact,
-      },
+    const formattedDate = format(editedData.date, "MM-dd-yyyy");
+    const updatedBill = {
+      name: editedData.name,
+      date: formattedDate,
+      type: editedData.type,
+      amount: editedData.amount,
+      address: editedData.address,
+      itemDetails: editedData.itemDetails,
+      quantity: editedData.quantity,
+      weight: editedData.weight,
+      contact: editedData.contact,
     };
-
     try {
-      await docClient.update(params).promise();
-      fetchItems();
-      navigate("/bills");
-    } catch (err) {
-      console.error("Error updating item:", err);
+      const response = await fetch(`http://localhost:5000/api/bills/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedBill),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update bill: ${response.status}`);
+      }
+
+      await fetchItems(); // Refresh updated data
+      navigate("/bills"); // Navigate after update
+    } catch (error) {
+      console.error("Error updating bill:", error);
+      alert("Failed to update the bill. Please try again.");
     }
   };
 

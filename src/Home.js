@@ -7,24 +7,25 @@ import { MdDownload } from "react-icons/md";
 import axios from "axios";
 
 export default function Home() {
-  const [rates, setRates] = useState(null);
+  const [rates, setRates] = useState({});
+  const [goldRate, setGoldRate] = useState(0);
 
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const response = await axios.get("https://www.goldapi.io/api/XAU/INR", {
-          headers: { "x-access-token": "goldapi-1f9kjusm833h169-io" },
-        });
-        setRates(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRates = async () => {
+  //     try {
+  //       const response = await axios.get("https://www.goldapi.io/api/XAU/INR", {
+  //         headers: { "x-access-token": "goldapi-1f9kjusm833h169-io" },
+  //       });
+  //       setRates(response.data);
+  //       console.log(rates);
+  //       setGoldRate(rates.price_gram_24k);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
 
-    fetchRates();
-  }, []);
-  console.log(Math.trunc(rates.price_gram_24k));
-
+  //   fetchRates();
+  // }, []);
   const generatePDF = (currentBill) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
@@ -124,6 +125,7 @@ export default function Home() {
           </li>
         </ul>
       ) : undefined}
+      <div>Today's Gold Rate : {goldRate}</div>{" "}
     </div>
   );
 }

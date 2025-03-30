@@ -1,8 +1,6 @@
 import { useState, useEffect, createContext, useCallback } from "react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { docClient } from "../aws/awsClient";
-
 const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
@@ -24,15 +22,15 @@ export const DataProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const fetchItems = useCallback(async () => {
-    const params = {
-      TableName: "bills",
-    };
-
     try {
-      const data = await docClient.scan(params).promise();
-      setBills(data.Items || []);
-    } catch (err) {
-      console.error("Error fetching items:", err);
+      const response = await fetch("http://localhost:5000/api/bills");
+      if (!response.ok) {
+        throw new Error(`Failed to fetch bills: ${response.status}`);
+      }
+      const data = await response.json();
+      setBills(data.bills);
+    } catch (error) {
+      console.error("Error fetching bills:", error);
     }
   }, []);
 
@@ -49,44 +47,58 @@ export const DataProvider = ({ children }) => {
     );
     setSearchResults(filteredBills);
   };
-
   const handleDelete = async (id) => {
-    const params = {
-      TableName: "bills",
-      Key: { id },
-    };
+    if (!window.confirm("Are you sure you want to delete this bill?")) return;
 
     try {
-      await docClient.delete(params).promise();
-      fetchItems();
-      navigate("/bills");
-    } catch (err) {
-      console.error("Error deleting item:", err);
+      const response = await fetch(`http://localhost:5000/api/bills/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete bill: ${response.status}`);
+      }
+
+      await fetchItems(); // Refresh the table after deleting
+      navigate("/bills"); // Redirect after delete
+    } catch (error) {
+      console.error("Error deleting bill:", error);
+      alert("Failed to delete the bill. Please try again.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const datetime = format(formData.date, "MM-dd-yyyy");
     const id = bills.length + 1;
-    const params = {
-      TableName: "bills",
-      Item: {
-        id: id.toString(),
-        name: formData.name,
-        date: datetime,
-        type: formData.type,
-        amount: formData.amount,
-        address: formData.address,
-        itemDetails: formData.itemDetails,
-        quantity: formData.quantity,
-        weight: formData.weight,
-        contact: formData.contact,
-      },
+
+    const itemData = {
+      id: id.toString(),
+      name: formData.name,
+      date: datetime,
+      type: formData.type,
+      amount: formData.amount,
+      address: formData.address,
+      itemDetails: formData.itemDetails,
+      quantity: formData.quantity,
+      weight: formData.weight,
+      contact: formData.contact,
     };
 
     try {
-      await docClient.put(params).promise();
+      const response = await fetch("http://localhost:5000/api/bills", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(itemData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create item");
+      }
+
       setFormData({
         name: "",
         date: new Date().toISOString().split("T")[0],
@@ -98,7 +110,8 @@ export const DataProvider = ({ children }) => {
         weight: "",
         contact: "",
       });
-      fetchItems();
+
+      fetchItems(); // Refresh data after adding a new item
     } catch (err) {
       console.error("Error creating item:", err);
     }
