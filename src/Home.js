@@ -1,14 +1,14 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import DataContext from "./context/DataContext";
 import { format, differenceInMonths } from "date-fns";
 import { Link } from "react-router-dom";
 import jsPDF from "jspdf";
 import { MdDownload } from "react-icons/md";
-import axios from "axios";
+// import axios from "axios";
 
 export default function Home() {
-  const [rates, setRates] = useState({});
-  const [goldRate, setGoldRate] = useState(0);
+  // const [rates, setRates] = useState({});
+  // const [goldRate, setGoldRate] = useState(0);
 
   // useEffect(() => {
   //   const fetchRates = async () => {
@@ -125,7 +125,7 @@ export default function Home() {
           </li>
         </ul>
       ) : undefined}
-      <div>Today's Gold Rate : {goldRate}</div>{" "}
+      {/* <div>Today's Gold Rate : {goldRate}</div>{" "} */}
     </div>
   );
 }
